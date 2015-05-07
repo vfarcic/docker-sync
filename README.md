@@ -15,30 +15,38 @@ sudo docker run -d --name sync \
   vfarcic/sync
 ```
 
-For a fully working example, please install Vagrant and run following commands:
+For a fully working example, please install Git and Vagrant and run following commands:
 
 
 ```bash
+git clone https://github.com/vfarcic/docker-sync.git
+cd docker-sync
 vagrant up
-vagrant provision
-
-vahrant ssh sync-02
+vagrant ssh destination
+# Create SSH keys. Answer with the ENTER key to all questions
 ssh-keygen
 exit
 
-vahrant ssh sync-01
+vagrant ssh source
+sudo su -
+# Create SSH keys. Answer with the ENTER key to all questions
 ssh-keygen
-ssh-copy-id sync-02 # Pass: vagrant
-sudo apt-get update
-sudo apt-get install -y lsyncd
-mkdir /tmp/something
-lsyncd -nodaemon -rsyncssh /tmp/something vagrant@sync-02 /tmp/something
-
-
+# Copy SSH keys from the destination machine. Password is vagrant
+ssh-copy-id vagrant@10.101.199.202
+exit
+mkdir /tmp/my_files
+touch /tmp/my_files/my_file /tmp/my_files/my_another_file
+# Run vfarcic/sync container
 sudo docker run -d --name sync \
   -v /root/.ssh:/root/.ssh \
-  -v /tmp/something:/data \
+  -v /tmp/my_files:/data \
   -e DESTINATION_HOST=vagrant@10.101.199.202 \
-  -e DESTINATION_DIR=/tmp/something \
+  -e DESTINATION_DIR=/tmp/my_files \
   vfarcic/sync
+exit
+
+# Verify that the files were copied to the destination server
+# It might take up to few minutes until the files are transferred
+vagrant ssh destination
+ll /tmp/my_files
 ```

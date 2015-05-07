@@ -9,12 +9,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider "virtualbox" do |v|
     v.memory = 1024
   end
-  (1..2).each do |i|
-    config.vm.define "sync-0#{i}" do |node|
-      node.vm.hostname = "sync-0#{i}"
-      node.vm.network "private_network", ip: "10.101.199.20#{i}"
-      node.vm.provision :hosts
-    end
+  config.vm.define "source" do |node|
+    node.vm.hostname = "source"
+    node.vm.network "private_network", ip: "10.101.199.201"
+    node.vm.provision "docker", images: ["vfarcic/sync"]
+  end
+  config.vm.define "destination" do |node|
+    node.vm.hostname = "destination"
+    node.vm.network "private_network", ip: "10.101.199.202"
   end
   if Vagrant.has_plugin?("vagrant-cachier")
     config.cache.scope = :box
