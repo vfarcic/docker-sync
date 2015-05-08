@@ -1,8 +1,8 @@
-FROM gliderlabs/alpine:3.1
+FROM debian:wheezy
 MAINTAINER Viktor Farcic "viktor@farcic.com"
 
-RUN apk --update add bash lsyncd openssh
-#RUN apk --update add lsyncd ssh
+RUN apt-get update
+RUN apt-get install -y lsyncd ssh
 COPY run.sh /run.sh
 RUN mkdir /data
 
