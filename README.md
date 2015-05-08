@@ -1,7 +1,7 @@
 This container implements a simple files synchronization using [lsyncd](https://code.google.com/p/lsyncd/).
 
 Following environment variables can be used:
-* SOURCE_DIRECTORY: Default to /data and represents a source directory from which files will be synced to destination.
+* SOURCE_DIRECTORY: Default to /data and represents a source directory from which files will be synced to destination. This directory is inside the container.
 * DESTINATION_HOST: Mandatory variable that points to the destination. If only IP is specified, root user will be used. To use a specific user use USER@IP format.
 * DESTINATION_DIR: Defaults to /data and represent a directory where files will be synchronized on the destination host.
 
